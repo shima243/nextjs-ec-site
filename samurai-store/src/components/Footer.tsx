@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // 共通フッター
-export default function Footer() {
+export default async function Footer() {
+  "use cache"
   const currentYear = new Date().getFullYear(); // 現在の年を取得
 
   return (
