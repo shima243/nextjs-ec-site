@@ -1,12 +1,14 @@
 'use client'; // クライアント（ブラウザ）側で動作
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter , useSearchParams} from 'next/navigation';
 import Link from 'next/link'; // 会員登録ページへのリンク用
 
 // ログインページ
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');  
   const [errorMessage, setErrorMessage] = useState(''); // エラーメッセージ
 
   // フォーム送信時のイベントハンドラ
@@ -31,8 +33,16 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      if (res.ok) { // ログイン成功時はトップページへ遷移
-        router.push('/?logged-in=1'); // ログイン成功をクエリパラメータで通知
+      const data = await res.json();
+
+      if (res.ok) {
+        if (data.isAdmin) { // 管理者のログイン時
+          router.push('/admin/products');
+        } else if (redirect) { // 保護ページからのリダイレクト
+          router.replace(redirect);
+        } else { // 通常のログイン時
+          router.push('/?logged-in=1');
+        }
         router.refresh(); // ヘッダー更新のためWebページを再読み込み
       } else { // ログイン失敗時はエラー情報を表示
         const data = await res.json();
