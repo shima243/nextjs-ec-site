@@ -28,13 +28,17 @@ export default function Home() {
   }, []);
 
   const searchParams = useSearchParams();
-  const isRegistered = searchParams.get('registered');
-  
+  const message =
+    searchParams.get('registered') ? '会員登録が完了しました。' :
+    searchParams.get('logged-in') ? 'ログインしました。' :
+    searchParams.get('logged-out') ? 'ログアウトしました。' :
+    null;
+
   return (
   <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">  
-      {isRegistered && (
+      {message && (
         <div className="bg-green-100 text-green-800 p-3 text-center shadow-md">
-          会員登録が完了しました。
+          {message}
         </div>
       )}
       <section className="relative w-full h-[60vh] sm:h-[70vh] overflow-hidden">
