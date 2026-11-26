@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from "next/image";
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import { type ProductData } from '@/types/product';
 
@@ -26,8 +27,16 @@ export default function Home() {
       .catch(err => console.error('商品データの取得に失敗しました。', err)); // エラー時の処理
   }, []);
 
+  const searchParams = useSearchParams();
+  const isRegistered = searchParams.get('registered');
+  
   return (
   <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">  
+      {isRegistered && (
+        <div className="bg-green-100 text-green-800 p-3 text-center shadow-md">
+          会員登録が完了しました。
+        </div>
+      )}
       <section className="relative w-full h-[60vh] sm:h-[70vh] overflow-hidden">
         <Image
           src="/images/main-visual.png"
@@ -118,5 +127,5 @@ export default function Home() {
         </section>
       </main>
     </div>
-  );
+  );    
 }
